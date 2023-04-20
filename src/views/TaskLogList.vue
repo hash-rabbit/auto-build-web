@@ -1,5 +1,10 @@
 <template>
     <div>
+        <el-breadcrumb separator="/" class="bc">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/task/list' }">任务管理</el-breadcrumb-item>
+            <el-breadcrumb-item>任务记录</el-breadcrumb-item>
+        </el-breadcrumb>
         <div>
             <el-select v-model="taskid" class="m-2" placeholder="Task" @change="selectChange">
                 <el-option v-for="item in options" :key="item.id" :label="item.branch + ' - ' + item.main_file"
@@ -68,3 +73,7 @@ const selectChange = () => {
     })
 }
 </script>
+
+<style>
+@import '../assets/main.css';
+</style>

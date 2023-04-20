@@ -1,5 +1,10 @@
 <template>
     <div>
+        <el-breadcrumb separator="/" class="bc">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/task/list' }">任务管理</el-breadcrumb-item>
+            <el-breadcrumb-item>任务列表</el-breadcrumb-item>
+        </el-breadcrumb>
         <div>
             <el-select v-model="projectid" class="m-2" placeholder="Project" @change="selectChange">
                 <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id" />
@@ -26,7 +31,7 @@
 
 <script setup>
 import { inject, onMounted, ref } from 'vue';
-import {ElMessage} from 'element-plus';
+import { ElMessage } from 'element-plus';
 let axios = inject("axios");
 let tableData = ref([])
 let options = ref([])
@@ -51,10 +56,10 @@ const handleClick = () => {
 
 }
 
-const startBuild = (id) =>{
+const startBuild = (id) => {
     console.log(id);
     let param = {
-        task_id:id
+        task_id: id
     }
     axios.post("/task/start", param).then((response) => {
         console.log(response);
@@ -72,12 +77,12 @@ const startBuild = (id) =>{
     })
 }
 
-const selectChange = ()=>{
+const selectChange = () => {
     console.log(projectid.value);
     let param = {
-        project_id:projectid.value
+        project_id: projectid.value
     }
-    axios.get("/task/list",{params:param}).then((response) => {
+    axios.get("/task/list", { params: param }).then((response) => {
         console.log(response);
         if (response.code === "success") {
             tableData.value = response.data
@@ -85,3 +90,7 @@ const selectChange = ()=>{
     })
 }
 </script>
+
+<style>
+@import '../assets/main.css';
+</style>

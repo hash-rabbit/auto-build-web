@@ -6,7 +6,12 @@
       </el-header>
       <el-scrollbar class="h-main">
         <el-menu :default-openeds="['/goenv', '/project', '/task']" router>
-          <el-menu-item index="/">首页</el-menu-item>
+          <el-menu-item index="/">
+            <el-icon>
+              <HomeFilled />
+            </el-icon>
+            <span>首页</span>
+          </el-menu-item>
           <el-sub-menu index="/goenv">
             <template #title>
               <el-icon>
@@ -38,7 +43,12 @@
             <el-menu-item index="/task/log/list">任务记录</el-menu-item>
             <el-menu-item index="/task/add">添加任务</el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="/about">关于</el-menu-item>
+          <el-menu-item index="/about">
+            <el-icon>
+              <UserFilled />
+            </el-icon>
+            <span>关于</span>
+          </el-menu-item>
         </el-menu>
       </el-scrollbar>
     </el-aside>
@@ -46,10 +56,7 @@
     <el-container>
       <el-header style="text-align: right; font-size: 12px">
         <div class="toolbar">
-          <el-icon style="margin-right: 8px; margin-top: 1px">
-            <Share />
-          </el-icon>
-          <a target="_blank" href="https://github.com/hash-rabbit/auto-build">Github</a>
+          <el-link :icon="Share" href="https://github.com/hash-rabbit/auto-build">Github</el-link>
         </div>
       </el-header>
 
@@ -64,7 +71,7 @@
 
 <script lang="ts" setup>
 // import { ref } from 'vue'
-import { Grid, Management, Promotion, Share } from '@element-plus/icons-vue'
+import { Grid, Management, Promotion, Share, HomeFilled, UserFilled } from '@element-plus/icons-vue'
 
 // const item = {
 //   date: '2016-05-02',
@@ -83,7 +90,7 @@ import { Grid, Management, Promotion, Share } from '@element-plus/icons-vue'
 
 .layout-container-demo .el-aside {
   color: var(--el-text-color-primary);
-  background: var(--el-color-primary-light-8);
+  /* background: var(--el-color-primary-light-8); */
 }
 
 .layout-container-demo .toolbar {
@@ -94,7 +101,11 @@ import { Grid, Management, Promotion, Share } from '@element-plus/icons-vue'
   right: 20px;
 }
 
+.el-aside .el-menu{
+  border-right: none;
+}
+
 .h-main {
   height: calc(100vh - 60px);
-}
-</style>
+  border-right: solid 2px var(--el-menu-border-color);
+}</style>

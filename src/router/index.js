@@ -43,6 +43,11 @@ const router = createRouter({
       path: '/task/log/list',
       name: 'task-log-list',
       component: () => import('../views/TaskLogList.vue')
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutMe.vue')
     }
   ]
 })
