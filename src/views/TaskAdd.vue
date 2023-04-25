@@ -94,6 +94,8 @@ onMounted(() => {
 
 const onSubmit = () => {
     console.log(form);
+    form.go_version_id = Number(form.go_version_id)
+    form.project_id = Number(form.project_id)
     axios.post("/task/add", form).then((response) => {
         console.log(response);
         if (response.code === "success") {

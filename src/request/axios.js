@@ -5,8 +5,8 @@ const instance = axios.create({
   baseURL: 'http://localhost:8000/api',
   timeout: 1000,
   headers: {
-    "Content-Type": "application/application/json",
-  },
+    "Content-Type": "application/json",
+  }
 });
 
 // 数据请求拦截

@@ -9,12 +9,13 @@
             <el-table-column fixed prop="name" label="Name" width="120" />
             <el-table-column prop="url" label="Url(git)" width="300" />
             <el-table-column prop="go_mod" label="GoMod" width="100" />
-            <el-table-column prop="go_path" label="WorkSpace" width="300" />
+            <el-table-column prop="workspace" label="WorkSpace" width="300" />
             <el-table-column prop="path" label="ProjectPath" width="500" />
             <el-table-column prop="env" label="环境变量" width="300" />
-            <el-table-column fixed="right" label="Operations" width="120">
-                <template #default>
+            <el-table-column fixed="right" label="Operations" width="180">
+                <template #default="scope">
                     <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button>
+                    <el-button link type="primary" size="small" @click="pullProject(scope.row.id)">更新</el-button>
                     <el-button link type="primary" size="small" disabled>删除</el-button>
                 </template>
             </el-table-column>
@@ -24,8 +25,11 @@
 
 <script setup>
 import { inject, onMounted, ref } from 'vue';
+import {ElMessage} from 'element-plus';
+
 let axios = inject("axios");
 let tableData = ref([])
+
 onMounted(() => {
     axios.get("/project/list").then((response) => {
         console.log(response);
@@ -34,8 +38,29 @@ onMounted(() => {
         }
     })
 })
+
 const handleClick = () => {
 
+}
+
+const pullProject = (id)=>{
+    let param = {
+        project_id : id
+    }
+    axios.post("/project/pull", param).then((response) => {
+        console.log(response);
+        if (response.code === "success") {
+            ElMessage({
+                message: response.msg,
+                type: 'success',
+            })
+        } else {
+            ElMessage({
+                message: response.msg,
+                type: 'warning',
+            })
+        }
+    })
 }
 </script>
 

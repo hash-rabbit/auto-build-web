@@ -13,12 +13,12 @@
                 <el-input v-model="form.url" />
             </el-form-item>
             <el-form-item label="Go Mod">
-                <el-radio-group v-model="form.gomod" class="ml-4">
+                <el-radio-group v-model="form.go_mod" class="ml-4">
                     <el-radio :label=true>是</el-radio>
                     <el-radio :label=false>否</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="WorkSpace" v-show="!form.gomod">
+            <el-form-item label="WorkSpace" v-show="!form.go_mod">
                 <el-input v-model="form.workspace" />
             </el-form-item>
             <el-form-item label="项目路径">
@@ -44,7 +44,7 @@ const axios = inject("axios");
 const form = reactive({
     name: '',
     url: '',
-    gomod: false,
+    go_mod: false,
     workspace: "",
     path: "",
     token: "",

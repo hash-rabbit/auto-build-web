@@ -30,8 +30,10 @@
 </template>
 
 <script setup>
+import {useRouter} from 'vue-router';
 import { inject, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
+const router=useRouter()
 let axios = inject("axios");
 let tableData = ref([])
 let options = ref([])
@@ -68,6 +70,7 @@ const startBuild = (id) => {
                 message: response.msg,
                 type: 'success',
             })
+            router.push({path:'/task/log/list'})
         } else {
             ElMessage({
                 message: response.msg,

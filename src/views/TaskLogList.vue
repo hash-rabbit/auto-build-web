@@ -23,6 +23,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="url" label="url" width="300" />
+            <el-table-column prop="description" label="Description" width="300" />
             <el-table-column prop="create_at" label="CreateAt" width="300" />
             <el-table-column prop="finish_at" label="FinishAt" width="300" />
             <el-table-column fixed="right" label="Operations" width="180">
