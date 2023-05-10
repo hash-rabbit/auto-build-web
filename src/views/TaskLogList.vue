@@ -27,14 +27,24 @@
             <el-table-column prop="create_at" label="CreateAt" width="300" />
             <el-table-column prop="finish_at" label="FinishAt" width="300" />
             <el-table-column fixed="right" label="Operations" width="180">
-                <template #default>
-                    <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button>
-                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">日志</el-button> -->
-                    <el-button link type="primary" size="small" disabled @click="handleClick">错误日志</el-button>
-                    <el-button link type="primary" size="small" disabled>删除</el-button>
+                <template #default="scope">
+                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button> -->
+                    <el-button link type="primary" size="small" @click="handleOutout(scope.row.id)">日志</el-button>
+                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">错误日志</el-button> -->
+                    <!-- <el-button link type="primary" size="small" disabled>删除</el-button> -->
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog v-model="outputVisible" title="日志" width="50%">
+            <span>
+                <el-text class="task-log">{{ output }}</el-text>
+            </span>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="outputVisible = false">关闭</el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -44,6 +54,8 @@ let axios = inject("axios");
 let tableData = ref([])
 let options = ref([])
 let taskid = ref(null)
+let outputVisible = ref(false)
+let output = ref("")
 onMounted(() => {
     axios.get("/task/list").then((response) => {
         console.log(response);
@@ -58,9 +70,7 @@ onMounted(() => {
         }
     })
 })
-const handleClick = () => {
 
-}
 const selectChange = () => {
     console.log(taskid.value);
     let param = {
@@ -73,8 +83,24 @@ const selectChange = () => {
         }
     })
 }
+
+const handleOutout = (id) => {
+    let param = {
+        task_log_id: id
+    }
+    axios.get("/task/log/output", { params: param }).then((response) => {
+        console.log(response);
+        if (response.code === "success") {
+            output.value = response.data
+            outputVisible.value = true
+        }
+    })
+}
 </script>
 
 <style>
 @import '../assets/main.css';
+.task-log{
+    white-space: pre-line;
+}
 </style>
