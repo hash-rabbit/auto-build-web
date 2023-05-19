@@ -9,6 +9,7 @@
             <el-table-column fixed prop="name" label="Name" width="120" />
             <el-table-column prop="url" label="Url(git)" width="300" />
             <el-table-column prop="go_mod" label="GoMod" width="100" />
+            <el-table-column prop="main_branch" label="主分支" width="100" />
             <el-table-column prop="workspace" label="WorkSpace" width="300" />
             <el-table-column prop="path" label="ProjectPath" width="500" />
             <el-table-column prop="env" label="环境变量" width="300" />

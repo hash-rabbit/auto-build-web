@@ -5,16 +5,21 @@
             <el-breadcrumb-item :to="{ path: '/task/list' }">任务管理</el-breadcrumb-item>
             <el-breadcrumb-item>任务记录</el-breadcrumb-item>
         </el-breadcrumb>
-        <div>
-            <el-select v-model="taskid" class="m-2" placeholder="Task" @change="selectChange">
-                <el-option v-for="item in options" :key="item.id" :label="item.branch + ' - ' + item.main_file"
-                    :value="item.id" />
+        <div class="header">
+            <el-select v-model="projectid" class="m-r-2" placeholder="Project" @change="projectChange" clearable>
+                <el-option v-for="item in projects" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
+            <el-select v-model="taskid" class="m-r-2" placeholder="Task" @change="taskChange" clearable>
+                <el-option v-for="item in tasks" :key="item.id" :label="item.branch" :value="item.id" />
+            </el-select>
+            <el-button type="primary" @click="handleRefresh">刷新</el-button>
         </div>
         <el-divider />
         <el-table :data="tableData" style="width: 100%">
             <el-table-column fixed prop="id" label="Id" width="150" />
-            <el-table-column prop="status" label="Status" width="150">
+            <el-table-column prop="name" label="Project" width="130" />
+            <el-table-column prop="branch" label="Task" width="150" />
+            <el-table-column prop="status" label="Status" width="120">
                 <template #default="scope">
                     <el-tag v-if="scope.row.status == 0" type="info">初始化</el-tag>
                     <el-tag v-if="scope.row.status == 1" type="warning">编译中</el-tag>
@@ -22,23 +27,30 @@
                     <el-tag v-if="scope.row.status == 3" type="danger">编译失败</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="url" label="url" width="300" />
-            <el-table-column prop="description" label="Description" width="300" />
+            <el-table-column prop="url" label="Url" width="300">
+                <template #default="scope">
+                    <el-tooltip effect="dark" content="点击复制" placement="top">
+                        <span @click="copyUrl(scope.row.url)" class="pointer">{{ scope.row.url }}</span>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            <el-table-column class="wrap" prop="description" label="Description" width="300" />
+            <el-table-column prop="version" label="GO环境" width="120" />
             <el-table-column prop="create_at" label="CreateAt" width="300" />
             <el-table-column prop="finish_at" label="FinishAt" width="300" />
-            <el-table-column fixed="right" label="Operations" width="180">
+            <el-table-column fixed="right" label="Operations" width="150">
                 <template #default="scope">
-                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button> -->
                     <el-button link type="primary" size="small" @click="handleOutout(scope.row.id)">日志</el-button>
-                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">错误日志</el-button> -->
-                    <!-- <el-button link type="primary" size="small" disabled>删除</el-button> -->
+                    <el-button link type="primary" size="small" @click="window.open(scope.row.url)">下载</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog v-model="outputVisible" title="日志" width="50%">
-            <span>
-                <el-text class="task-log">{{ output }}</el-text>
-            </span>
+            <div class="text">
+                <span>
+                    <el-text class="wrap">{{ output }}</el-text>
+                </span>
+            </div>
             <template #footer>
                 <span class="dialog-footer">
                     <el-button @click="outputVisible = false">关闭</el-button>
@@ -50,31 +62,62 @@
 
 <script setup>
 import { inject, onMounted, ref } from 'vue';
+import { ElMessage } from 'element-plus'
+
 let axios = inject("axios");
+
 let tableData = ref([])
-let options = ref([])
+
+let projects = ref([])
+let projectid = ref(null)
+
+let tasks = ref([])
 let taskid = ref(null)
+
 let outputVisible = ref(false)
 let output = ref("")
+
 onMounted(() => {
-    axios.get("/task/list").then((response) => {
+    axios.get("/project/list").then((response) => {
         console.log(response);
         if (response.code === "success") {
-            options.value = response.data
+            projects.value = response.data
         }
     })
-    axios.get("/task/log/list").then((response) => {
-        console.log(response);
-        if (response.code === "success") {
-            tableData.value = response.data
-        }
-    })
+
+    getTaskLog()
 })
 
-const selectChange = () => {
-    console.log(taskid.value);
+const projectChange = () => {
+    tasks.value = []
+
+    if (projectid.value) {
+        let param = {
+            project_id: projectid.value
+        }
+        axios.get("/task/list", { params: param }).then((response) => {
+            console.log(response);
+            if (response.code === "success") {
+                tasks.value = response.data
+            }
+        })
+    }
+
+    getTaskLog()
+}
+
+const taskChange = () => {
+    getTaskLog()
+}
+
+const handleRefresh = () => {
+    getTaskLog()
+}
+
+const getTaskLog = () => {
     let param = {
-        task_id: taskid.value
+        project_id: projectid.value ? projectid.value : 0,
+        task_id: taskid.value ? taskid.value : 0,
     }
     axios.get("/task/log/list", { params: param }).then((response) => {
         console.log(response);
@@ -96,11 +139,46 @@ const handleOutout = (id) => {
         }
     })
 }
+
+const copyUrl = (url) => {
+    navigator.clipboard.writeText(url).then(function () {
+        ElMessage({
+            message: "拷贝到剪切板成功",
+            type: 'success',
+        })
+    }, function () {
+        ElMessage({
+            message: "拷贝失败",
+            type: 'warning',
+        })
+    });
+}
 </script>
 
 <style>
 @import '../assets/main.css';
-.task-log{
-    white-space: pre-line;
+
+.wrap {
+    white-space: pre-wrap;
 }
+
+.text {
+    border: 1px solid rgb(186, 186, 186);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.pointer:hover {
+    cursor: pointer;
+}
+
+.header {
+    padding: 5px;
+    /* background-color: antiquewhite; */
+}
+
+.m-r-2 {
+    margin-right: 20px;
+}
+
 </style>

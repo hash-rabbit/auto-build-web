@@ -19,6 +19,12 @@
             <el-form-item label="Branch">
                 <el-input v-model="form.branch" placeholder="master" />
             </el-form-item>
+            <el-form-item label="自动编译">
+                <el-select v-model="form.auto_build">
+                    <el-option label="是" :value="true" />
+                    <el-option label="否" :value="false" />
+                </el-select>
+            </el-form-item>
             <el-form-item label="MainFile">
                 <el-input v-model="form.main_file" placeholder="main.go" />
             </el-form-item>
@@ -57,6 +63,7 @@ const form = reactive({
     project_id: null,
     go_version_id: null,
     branch: "",
+    auto_build:false,
     main_file: "",
     dest_file: "",
     dest_os: "linux",

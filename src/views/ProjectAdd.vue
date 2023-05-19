@@ -10,7 +10,10 @@
                 <el-input v-model="form.name" />
             </el-form-item>
             <el-form-item label="Url (Git地址)">
-                <el-input v-model="form.url" />
+                <el-input v-model="form.url" placeholder="https://xxx.git"/>
+            </el-form-item>
+            <el-form-item label="主分支名">
+                <el-input v-model="form.main_branch" placeholder="master"/>
             </el-form-item>
             <el-form-item label="Go Mod">
                 <el-radio-group v-model="form.go_mod" class="ml-4">
