@@ -60,10 +60,10 @@
         </div>
       </el-header>
 
-      <el-main>
-        <el-scrollbar height="100%">
+      <el-main class="main">
+        <!-- <el-scrollbar height="100%"> -->
           <router-view></router-view>
-        </el-scrollbar>
+        <!-- </el-scrollbar> -->
       </el-main>
     </el-container>
   </el-container>
@@ -100,4 +100,9 @@ import { Grid, Management, Promotion, Share, HomeFilled, UserFilled } from '@ele
 .h-main {
   height: calc(100vh - 60px);
   border-right: solid 2px var(--el-menu-border-color);
-}</style>
+}
+
+.main{
+  height: calc(100vh - 60px);
+}
+</style>

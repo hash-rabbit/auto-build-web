@@ -12,6 +12,7 @@
         </div>
         <el-divider />
         <el-table :data="tableData" style="width: 100%">
+            <el-table-column fixed prop="name" label="Project" width="120" />
             <el-table-column fixed prop="branch" label="Branch" width="120" />
             <el-table-column prop="main_file" label="MainFile" width="150" />
             <el-table-column prop="dest_file" label="DestFile" width="150" />
@@ -27,8 +28,8 @@
             <el-table-column fixed="right" label="Operations" width="180">
                 <template #default="scope">
                     <el-button link type="primary" size="small" @click="startBuild(scope.row.id)">编译</el-button>
-                    <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button>
-                    <el-button link type="primary" size="small" disabled>删除</el-button>
+                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button> -->
+                    <el-button link type="primary" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -60,10 +61,6 @@ onMounted(() => {
     })
 })
 
-const handleClick = () => {
-
-}
-
 const startBuild = (id) => {
     console.log(id);
     let param = {
@@ -88,16 +85,6 @@ const startBuild = (id) => {
 
 const selectChange = () => {
     refreshData()
-    // console.log(projectid.value);
-    // let param = {
-    //     project_id: projectid.value
-    // }
-    // axios.get("/task/list", { params: param }).then((response) => {
-    //     console.log(response);
-    //     if (response.code === "success") {
-    //         tableData.value = response.data
-    //     }
-    // })
 }
 
 const ChangAutoBuild = (val, taskid) => {
@@ -131,6 +118,27 @@ const refreshData = () => {
         if (response.code === "success") {
             tableData.value = response.data
         }
+    })
+}
+
+const deleteHandle = (id)=>{
+    let param = {
+        id: id
+    }
+    axios.delete("/task/delete", {data:param}).then((response) => {
+        console.log(response);
+        if (response.code === "success") {
+            ElMessage({
+                message: response.msg,
+                type: 'success',
+            })
+        } else {
+            ElMessage({
+                message: response.msg,
+                type: 'warning',
+            })
+        }
+        refreshData()
     })
 }
 

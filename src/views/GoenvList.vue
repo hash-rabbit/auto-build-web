@@ -12,9 +12,9 @@
             <el-table-column prop="sha2" label="Sha2" />
             <el-table-column prop="localpath" label="本地目录" />
             <el-table-column fixed="right" label="Operations" width="120">
-                <template #default>
-                    <el-button link type="primary" size="small" @click="handleClick" disabled>详情</el-button>
-                    <el-button link type="primary" size="small" disabled>删除</el-button>
+                <template #default="scope">
+                    <!-- <el-button link type="primary" size="small" @click="handleClick" disabled>详情</el-button> -->
+                    <el-button link type="primary" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -23,23 +23,45 @@
 
 <script setup>
 import { inject, onMounted, ref } from 'vue';
+import {ElMessage} from 'element-plus';
+
 let axios = inject("axios");
 let tableData = ref([])
-// let formInline = ref({})/
+
 onMounted(() => {
+    refreshData()
+})
+
+const refreshData = () => {
     axios.get("/goenv/list").then((response) => {
         console.log(response);
         if (response.code === "success") {
             tableData.value = response.data
         }
     })
-})
-const handleClick = () => {
-
 }
-// const onSubmit = () => {
 
-// }
+const deleteHandle = (id)=>{
+    let param = {
+        id : id
+    }
+    axios.delete("/goenv/delete", {data:param}).then((response) => {
+        console.log(response);
+        if (response.code === "success") {
+            ElMessage({
+                message: response.msg,
+                type: 'success',
+            })
+        } else {
+            ElMessage({
+                message: response.msg,
+                type: 'warning',
+            })
+        }
+        refreshData()
+    })
+}
+
 </script>
 
 <style>

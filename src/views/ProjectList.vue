@@ -15,9 +15,9 @@
             <el-table-column prop="env" label="环境变量" width="300" />
             <el-table-column fixed="right" label="Operations" width="180">
                 <template #default="scope">
-                    <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button>
+                    <!-- <el-button link type="primary" size="small" disabled @click="handleClick">详情</el-button> -->
                     <el-button link type="primary" size="small" @click="pullProject(scope.row.id)">更新</el-button>
-                    <el-button link type="primary" size="small" disabled>删除</el-button>
+                    <el-button link type="primary" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -32,16 +32,16 @@ let axios = inject("axios");
 let tableData = ref([])
 
 onMounted(() => {
+    refreshData()
+})
+
+const refreshData = () => {
     axios.get("/project/list").then((response) => {
         console.log(response);
         if (response.code === "success") {
             tableData.value = response.data
         }
     })
-})
-
-const handleClick = () => {
-
 }
 
 const pullProject = (id)=>{
@@ -63,6 +63,28 @@ const pullProject = (id)=>{
         }
     })
 }
+
+const deleteHandle = (id) =>{
+    let param = {
+        project_id : id
+    }
+    axios.delete("/project/delete", {data:param}).then((response) => {
+        console.log(response);
+        if (response.code === "success") {
+            ElMessage({
+                message: response.msg,
+                type: 'success',
+            })
+        } else {
+            ElMessage({
+                message: response.msg,
+                type: 'warning',
+            })
+        }
+        refreshData()
+    })
+}
+
 </script>
 
 <style>
