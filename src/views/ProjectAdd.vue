@@ -47,6 +47,7 @@ const axios = inject("axios");
 const form = reactive({
     name: '',
     url: '',
+    main_branch:'master',
     go_mod: false,
     workspace: "",
     path: "",

@@ -66,7 +66,7 @@ const pullProject = (id)=>{
 
 const deleteHandle = (id) =>{
     let param = {
-        project_id : id
+        id : id
     }
     axios.delete("/project/delete", {data:param}).then((response) => {
         console.log(response);
