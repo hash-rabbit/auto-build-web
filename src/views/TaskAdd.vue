@@ -7,7 +7,7 @@
     <div class="center">
         <el-form :model="form" label-width="120px">
             <el-form-item label="项目">
-                <el-select v-model="form.project_id">
+                <el-select v-model="form.project_id" @change="onSelectProject">
                     <el-option v-for="item in projectOPtions" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
@@ -17,7 +17,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="Branch">
-                <el-input v-model="form.branch" placeholder="master" />
+                <el-select v-model="form.branch">
+                    <el-option v-for="item in branchOptions" :key="item" :label="item" :value="item" />
+                </el-select>
+                <!-- <el-input v-model="form.branch" placeholder="master" /> -->
             </el-form-item>
             <el-form-item label="自动编译">
                 <el-select v-model="form.auto_build">
@@ -26,9 +29,9 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="MainFile">
-                <el-input v-model="form.main_file" placeholder="main.go" />
+                <el-tree-select v-model="form.main_file" :data="projectTree" lazy :load="load" :props="props" />
             </el-form-item>
-            <el-form-item label="DestFile">
+            <el-form-item label="DestFileName">
                 <el-input v-model="form.dest_file" placeholder="main" />
             </el-form-item>
             <el-form-item label="目标系统">
@@ -54,25 +57,34 @@
         </el-form>
     </div>
 </template>
-  
+
 <script setup>
-import { reactive, inject, ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import {
+    reactive,
+    inject,
+    ref,
+    onMounted
+} from 'vue'
+import {
+    ElMessage
+} from 'element-plus'
 const axios = inject("axios");
 const form = reactive({
     project_id: null,
     go_version_id: null,
     branch: "",
-    auto_build:false,
-    main_file: "",
+    auto_build: false,
+    main_file: null,
     dest_file: "",
     dest_os: "linux",
     dest_arch: "amd64",
-    env: ""
+    env: "",
 })
 
+let projectTree = ref([])
 let envOptions = ref([])
 let projectOPtions = ref([])
+let branchOptions = ref([])
 
 onMounted(() => {
     axios.get("/goenv/list").then((response) => {
@@ -99,6 +111,28 @@ onMounted(() => {
     })
 })
 
+const onSelectProject = (value) => {
+    let param = {
+        id: value,
+    }
+
+    axios.get("/project/lsdir", {
+        params: param
+    }).then((response) => {
+        if (response.code == "success") {
+            projectTree.value = response.data
+        }
+    })
+
+    axios.get("/project/branch/list", {
+        params: param
+    }).then((response) => {
+        if (response.code == "success") {
+            branchOptions.value = response.data
+        }
+    })
+}
+
 const onSubmit = () => {
     console.log(form);
     form.go_version_id = Number(form.go_version_id)
@@ -118,8 +152,33 @@ const onSubmit = () => {
         }
     })
 }
+
+const props = {
+    label: 'label',
+    children: 'children',
+    isLeaf: 'isLeaf',
+}
+
+const load = (node, resolve) => {
+    if (!form.project_id) return resolve([])
+    if (node.isLeaf) return resolve([])
+
+    let param = {
+        id: form.project_id,
+        path: node.data.value ? node.data.value : "",
+    }
+
+    axios.get("/project/lsdir", {
+        params: param
+    }).then((response) => {
+        console.log(response);
+        if (response.code == "success") {
+            resolve(response.data)
+        }
+    })
+}
 </script>
-  
+
 <style>
 .center {
     margin-top: 20px;
