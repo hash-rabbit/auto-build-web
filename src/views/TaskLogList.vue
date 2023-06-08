@@ -14,7 +14,7 @@
             </el-select>
             <el-button type="primary" @click="handleRefresh">刷新</el-button>
         </div>
-        <!-- <el-divider /> -->
+        <el-divider class="divider"/>
         <el-table :data="tableData" style="width: 100%">
             <!-- <el-table-column prop="id" label="Id" width="150" /> -->
             <el-table-column prop="name" label="Project" width="130" />
@@ -231,4 +231,9 @@ const copyToClipboard = (textToCopy) => {
 .m-r-2 {
     margin-right: 20px;
 }
+
+.divider {
+  margin: 14px 0px;
+}
+
 </style>

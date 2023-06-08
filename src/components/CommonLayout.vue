@@ -53,7 +53,7 @@
       </el-scrollbar>
     </el-aside>
 
-    <el-container>
+    <el-container class="bg-gray">
       <el-header style="text-align: right; font-size: 12px">
         <div class="toolbar">
           <el-link :icon="Share" href="https://github.com/hash-rabbit/auto-build">Github</el-link>
@@ -104,5 +104,9 @@ import { Grid, Management, Promotion, Share, HomeFilled, UserFilled } from '@ele
 
 .main{
   height: calc(100vh - 60px);
+}
+
+.bg-gray{
+    background-color: rgb(250, 250, 250);
 }
 </style>
