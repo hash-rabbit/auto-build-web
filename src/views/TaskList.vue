@@ -5,12 +5,13 @@
             <el-breadcrumb-item :to="{ path: '/task/list' }">任务管理</el-breadcrumb-item>
             <el-breadcrumb-item>任务列表</el-breadcrumb-item>
         </el-breadcrumb>
-        <div>
+        <div class="header">
             <el-select v-model="projectid" class="m-2" placeholder="Project" @change="selectChange" clearable>
                 <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
+            <el-button class="right" type="primary" @click="showDialog = true">新建任务</el-button>
         </div>
-        <el-divider />
+        <el-divider class="divider"/>
         <el-table :data="tableData" style="width: 100%">
             <el-table-column fixed prop="name" label="Project" width="120" />
             <el-table-column fixed prop="branch" label="Branch" width="120" />
@@ -33,6 +34,9 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog v-model="showDialog" :title="dialogTitle" destroy-on-close>
+            <TaskAdd @add-event="closeDialog"></TaskAdd>
+        </el-dialog>
     </div>
 </template>
 
@@ -40,11 +44,15 @@
 import { useRouter } from 'vue-router';
 import { inject, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
+import TaskAdd from '../components/TaskAdd.vue';
+
 const router = useRouter()
 let axios = inject("axios");
 let tableData = ref([])
 let options = ref([])
 let projectid = ref(null)
+let showDialog = ref(false)
+let dialogTitle = ref("新建任务")
 
 onMounted(() => {
     axios.get("/project/list").then((response) => {
@@ -142,8 +150,21 @@ const deleteHandle = (id)=>{
     })
 }
 
+const closeDialog = () =>{
+    showDialog.value = false
+    refreshData()
+}
+
 </script>
 
 <style>
 @import '../assets/main.css';
+.header {
+    padding: 5px;
+    display: flex;
+}
+
+.right {
+    margin-left: auto;
+}
 </style>

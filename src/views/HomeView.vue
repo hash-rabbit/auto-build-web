@@ -80,6 +80,7 @@
                         <el-statistic :value="0">
                             <template #title>
                                 <div>待添加数据</div>
+                                <!-- TODO: 平均耗时 -->
                                 <!-- <div style="display: inline-flex; align-items: center">
                                     Daily active users
                                     <el-tooltip effect="dark"
@@ -111,6 +112,7 @@
                         <el-statistic :value="0">
                             <template #title>
                                 <div>待添加数据</div>
+                                <!-- TODO:  -->
                                 <!-- <div style="display: inline-flex; align-items: center">
                                     Daily active users
                                     <el-tooltip effect="dark"
@@ -152,6 +154,7 @@
                         <template #default>
                             <div class="h-350">
                                 <div>待添加数据</div>
+                                <!-- TODO: 最近的 10 个项目,编译数量最多的十个项目 -->
                                 <!-- <div>header</div>
                                 <div v-for="o in 10" :key="o" class="text item">{{ 'List item ' + o }}</div> -->
                             </div>

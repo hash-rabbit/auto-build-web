@@ -16,7 +16,6 @@
         </div>
         <el-divider class="divider"/>
         <el-table :data="tableData" style="width: 100%">
-            <!-- <el-table-column prop="id" label="Id" width="150" /> -->
             <el-table-column prop="name" label="Project" width="130" />
             <el-table-column prop="branch" label="Task" width="150" />
             <el-table-column prop="status" label="Status" width="120">
@@ -225,15 +224,11 @@ const copyToClipboard = (textToCopy) => {
 
 .header {
     padding: 5px;
-    /* background-color: antiquewhite; */
+    display: flex;
 }
 
 .m-r-2 {
     margin-right: 20px;
-}
-
-.divider {
-  margin: 14px 0px;
 }
 
 </style>

@@ -12,37 +12,24 @@
             </el-icon>
             <span>首页</span>
           </el-menu-item>
-          <el-sub-menu index="/goenv">
-            <template #title>
-              <el-icon>
-                <Management />
-              </el-icon>
-              GO环境管理
-            </template>
-            <el-menu-item index="/goenv/list">Go 环境列表</el-menu-item>
-            <el-menu-item index="/goenv/add">添加 Golang 环境</el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="/project">
-            <template #title>
-              <el-icon>
-                <Grid />
-              </el-icon>
-              项目管理
-            </template>
-            <el-menu-item index="/project/list">项目列表</el-menu-item>
-            <el-menu-item index="/project/add">添加项目</el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="/task">
-            <template #title>
-              <el-icon>
-                <Promotion />
-              </el-icon>
-              任务管理
-            </template>
-            <el-menu-item index="/task/list">任务列表</el-menu-item>
-            <el-menu-item index="/task/log/list">任务记录</el-menu-item>
-            <el-menu-item index="/task/add">添加任务</el-menu-item>
-          </el-sub-menu>
+          <el-menu-item index="/project/list">
+            <el-icon>
+              <Grid />
+            </el-icon>
+            <span>项目列表</span>
+          </el-menu-item>
+          <el-menu-item index="/task/list">
+            <el-icon>
+              <Promotion />
+            </el-icon>
+            <span>任务列表</span>
+          </el-menu-item>
+          <el-menu-item index="/task/log/list">
+            <el-icon>
+              <Management />
+            </el-icon>
+            <span>任务记录</span>
+          </el-menu-item>
           <el-menu-item index="/about">
             <el-icon>
               <UserFilled />

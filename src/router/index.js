@@ -10,34 +10,14 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/goenv/list',
-      name: 'goenv-list',
-      component: () => import('../views/GoenvList.vue')
-    },
-    {
-      path: '/goenv/add',
-      name: 'goenv-add',
-      component: () => import('../views/GoenvAdd.vue')
-    },
-    {
       path: '/project/list',
       name: 'project-list',
       component: () => import('../views/ProjectList.vue')
     },
     {
-      path: '/project/add',
-      name: 'project-add',
-      component: () => import('../views/ProjectAdd.vue')
-    },
-    {
       path: '/task/list',
       name: 'task-list',
       component: () => import('../views/TaskList.vue')
-    },
-    {
-      path: '/task/add',
-      name: 'task-add',
-      component: () => import('../views/TaskAdd.vue')
     },
     {
       path: '/task/log/list',

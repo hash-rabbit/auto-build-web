@@ -1,19 +1,14 @@
 <template>
-    <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/project/list' }">项目管理</el-breadcrumb-item>
-        <el-breadcrumb-item>添加项目</el-breadcrumb-item>
-    </el-breadcrumb>
     <div class="center">
         <el-form :model="form" label-width="120px">
             <el-form-item label="Name">
                 <el-input v-model="form.name" />
             </el-form-item>
             <el-form-item label="Url (Git地址)">
-                <el-input v-model="form.url" placeholder="https://xxx.git"/>
+                <el-input v-model="form.url" placeholder="https://xxx.git" />
             </el-form-item>
             <el-form-item label="主分支名">
-                <el-input v-model="form.main_branch" placeholder="master"/>
+                <el-input v-model="form.main_branch" placeholder="master" />
             </el-form-item>
             <el-form-item label="Go Mod">
                 <el-radio-group v-model="form.go_mod" class="ml-4">
@@ -43,12 +38,15 @@
 <script setup>
 import { reactive, inject } from 'vue'
 import { ElMessage } from 'element-plus'
+
 const axios = inject("axios");
+const emits = defineEmits(['addEvent'])
+
 const form = reactive({
     name: '',
     url: '',
-    main_branch:'master',
-    go_mod: false,
+    main_branch: 'master',
+    go_mod: true,
     workspace: "",
     path: "",
     token: "",
@@ -64,6 +62,7 @@ const onSubmit = () => {
                 message: response.msg,
                 type: 'success',
             })
+            emits('addEvent')
         } else {
             ElMessage({
                 message: response.msg,
@@ -76,9 +75,8 @@ const onSubmit = () => {
   
 <style>
 .center {
-    margin-top: 20px;
     width: 500px;
-    margin: 20px auto 0 auto;
+    margin: 0px auto 0 auto;
     align-items: center;
     justify-content: center;
     height: 100%;

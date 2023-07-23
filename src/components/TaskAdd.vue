@@ -1,9 +1,4 @@
 <template>
-    <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/task/list' }">任务管理</el-breadcrumb-item>
-        <el-breadcrumb-item>添加任务</el-breadcrumb-item>
-    </el-breadcrumb>
     <div class="center">
         <el-form :model="form" label-width="120px">
             <el-form-item label="项目">
@@ -13,7 +8,7 @@
             </el-form-item>
             <el-form-item label="Golang 版本">
                 <el-select v-model="form.go_version_id">
-                    <el-option v-for="item in envOptions" :key="item.id" :label="item.version" :value="item.id" />
+                    <el-option v-for="item in envOptions" :key="item" :label="item" :value="item" />
                 </el-select>
             </el-form-item>
             <el-form-item label="Branch">
@@ -29,7 +24,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="MainFile">
-                <el-tree-select v-model="form.main_file" :data="projectTree" lazy :load="load" :props="props" />
+                <!-- <el-tree-select v-model="form.main_file" :data="projectTree" lazy :load="load" :props="props" /> -->
+                <el-input v-model="form.main_file" placeholder="master" />
             </el-form-item>
             <el-form-item label="DestFileName">
                 <el-input v-model="form.dest_file" placeholder="main" />
@@ -68,20 +64,22 @@ import {
 import {
     ElMessage
 } from 'element-plus'
+
 const axios = inject("axios");
+const emits = defineEmits(['addEvent'])
+
 const form = reactive({
     project_id: null,
-    go_version_id: null,
+    go_version_id: "",
     branch: "",
     auto_build: false,
-    main_file: null,
+    main_file: "",
     dest_file: "",
     dest_os: "linux",
     dest_arch: "amd64",
     env: "",
 })
 
-let projectTree = ref([])
 let envOptions = ref([])
 let projectOPtions = ref([])
 let branchOptions = ref([])
@@ -116,14 +114,6 @@ const onSelectProject = (value) => {
         id: value,
     }
 
-    axios.get("/project/lsdir", {
-        params: param
-    }).then((response) => {
-        if (response.code == "success") {
-            projectTree.value = response.data
-        }
-    })
-
     axios.get("/project/branch/list", {
         params: param
     }).then((response) => {
@@ -135,7 +125,6 @@ const onSelectProject = (value) => {
 
 const onSubmit = () => {
     console.log(form);
-    form.go_version_id = Number(form.go_version_id)
     form.project_id = Number(form.project_id)
     axios.post("/task/add", form).then((response) => {
         console.log(response);
@@ -144,6 +133,7 @@ const onSubmit = () => {
                 message: response.msg,
                 type: 'success',
             })
+            emits('addEvent')
         } else {
             ElMessage({
                 message: response.msg,
@@ -152,38 +142,12 @@ const onSubmit = () => {
         }
     })
 }
-
-const props = {
-    label: 'label',
-    children: 'children',
-    isLeaf: 'isLeaf',
-}
-
-const load = (node, resolve) => {
-    if (!form.project_id) return resolve([])
-    if (node.isLeaf) return resolve([])
-
-    let param = {
-        id: form.project_id,
-        path: node.data.value ? node.data.value : "",
-    }
-
-    axios.get("/project/lsdir", {
-        params: param
-    }).then((response) => {
-        console.log(response);
-        if (response.code == "success") {
-            resolve(response.data)
-        }
-    })
-}
 </script>
 
 <style>
 .center {
-    margin-top: 20px;
     width: 500px;
-    margin: 20px auto 0 auto;
+    margin: 0 auto 0 auto;
     align-items: center;
     justify-content: center;
     height: 100%;
