@@ -25,8 +25,15 @@
             <el-form-item label="Token">
                 <el-input v-model="form.token" />
             </el-form-item>
-            <el-form-item label="环境变量">
-                <el-input v-model="form.env" placeholder="key=value;key2=value2" />
+            <el-button class="m-l-50" text type="primary" @click="showMore = !showMore">更多</el-button>
+            <el-form-item label="环境变量" v-show="showMore">
+                <el-input v-model="form.env" placeholder='key=value&#10;key2=value2' type="textarea" :autosize="{ minRows: 3, maxRows: 7 }" />
+            </el-form-item>
+            <el-form-item label="编译前脚本" v-show="showMore">
+                <el-input v-model="form.before_build_cmd" placeholder="#!/bin/sh&#10;echo 'before build'" type="textarea" :autosize="{ minRows: 3, maxRows: 7 }" />
+            </el-form-item>
+            <el-form-item label="编译后脚本" v-show="showMore">
+                <el-input v-model="form.after_build_cmd" placeholder="#!/bin/sh&#10;echo 'after build'" type="textarea" :autosize="{ minRows: 3, maxRows: 7 }" />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">Add</el-button>
@@ -36,7 +43,7 @@
 </template>
   
 <script setup>
-import { reactive, inject } from 'vue'
+import { reactive, inject, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const axios = inject("axios");
@@ -50,8 +57,11 @@ const form = reactive({
     workspace: "",
     path: "",
     token: "",
-    env: ""
+    env: "",
+    before_build_cmd:"",
+    after_build_cmd:""
 })
+let showMore = ref(false)
 
 const onSubmit = () => {
     console.log(form);
@@ -80,5 +90,9 @@ const onSubmit = () => {
     align-items: center;
     justify-content: center;
     height: 100%;
+}
+
+.m-l-50{
+    margin-left: 50px;
 }
 </style>

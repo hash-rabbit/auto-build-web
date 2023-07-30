@@ -44,8 +44,15 @@
                     <el-option label="x86" value="386" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="环境变量">
-                <el-input v-model="form.env" placeholder="key=value;key2=value2" />
+            <el-button class="m-l-50" text type="primary" @click="showMore = !showMore">更多</el-button>
+            <el-form-item label="环境变量" v-show="showMore">
+                <el-input v-model="form.env" placeholder='key=value&#10;key2=value2' type="textarea" :autosize="{ minRows: 3, maxRows: 7 }" />
+            </el-form-item>
+            <el-form-item label="编译前脚本" v-show="showMore">
+                <el-input v-model="form.before_build_cmd" placeholder="#!/bin/sh&#10;echo 'before build'" type="textarea" :autosize="{ minRows: 3, maxRows: 7 }" />
+            </el-form-item>
+            <el-form-item label="编译后脚本" v-show="showMore">
+                <el-input v-model="form.after_build_cmd" placeholder="#!/bin/sh&#10;echo 'after build'" type="textarea" :autosize="{ minRows: 3, maxRows: 7 }" />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">Add</el-button>
@@ -78,11 +85,14 @@ const form = reactive({
     dest_os: "linux",
     dest_arch: "amd64",
     env: "",
+    before_build_cmd:"",
+    after_build_cmd:""
 })
 
 let envOptions = ref([])
 let projectOPtions = ref([])
 let branchOptions = ref([])
+let showMore = ref(false)
 
 onMounted(() => {
     axios.get("/goenv/list").then((response) => {
@@ -151,5 +161,8 @@ const onSubmit = () => {
     align-items: center;
     justify-content: center;
     height: 100%;
+}
+.m-l-50{
+    margin-left: 50px;
 }
 </style>

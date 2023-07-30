@@ -33,3 +33,8 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## Feature
+
+- [x] 增加前置和后置命令
+- [x] env 用多行框
