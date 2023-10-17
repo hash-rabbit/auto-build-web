@@ -10,6 +10,11 @@
             <el-form-item label="主分支名">
                 <el-input v-model="form.main_branch" placeholder="master" />
             </el-form-item>
+            <el-form-item label="Golang 版本">
+                <el-select v-model="form.go_version_id">
+                    <el-option v-for="item in envOptions" :key="item" :label="item" :value="item" />
+                </el-select>
+            </el-form-item>
             <el-form-item label="Go Mod">
                 <el-radio-group v-model="form.go_mod" class="ml-4">
                     <el-radio :label=true>是</el-radio>
@@ -43,7 +48,7 @@
 </template>
   
 <script setup>
-import { reactive, inject, ref } from 'vue'
+import { reactive, inject, ref,onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const axios = inject("axios");
@@ -52,6 +57,7 @@ const emits = defineEmits(['addEvent'])
 const form = reactive({
     name: '',
     url: '',
+    go_version_id: "",
     main_branch: 'master',
     go_mod: true,
     workspace: "",
@@ -62,6 +68,22 @@ const form = reactive({
     after_build_cmd:""
 })
 let showMore = ref(false)
+let envOptions = ref([])
+
+
+onMounted(() => {
+    axios.get("/goenv/list").then((response) => {
+        console.log(response);
+        if (response.code === "success") {
+            envOptions.value = response.data
+        } else {
+            ElMessage({
+                message: response.msg,
+                type: 'success',
+            })
+        }
+    })
+})
 
 const onSubmit = () => {
     console.log(form);

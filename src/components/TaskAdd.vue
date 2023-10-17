@@ -6,11 +6,6 @@
                     <el-option v-for="item in projectOPtions" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="Golang 版本">
-                <el-select v-model="form.go_version_id">
-                    <el-option v-for="item in envOptions" :key="item" :label="item" :value="item" />
-                </el-select>
-            </el-form-item>
             <el-form-item label="Branch">
                 <el-select v-model="form.branch">
                     <el-option v-for="item in branchOptions" :key="item" :label="item" :value="item" />
@@ -77,7 +72,6 @@ const emits = defineEmits(['addEvent'])
 
 const form = reactive({
     project_id: null,
-    go_version_id: "",
     branch: "",
     auto_build: false,
     main_file: "",
@@ -89,23 +83,11 @@ const form = reactive({
     after_build_cmd:""
 })
 
-let envOptions = ref([])
 let projectOPtions = ref([])
 let branchOptions = ref([])
 let showMore = ref(false)
 
 onMounted(() => {
-    axios.get("/goenv/list").then((response) => {
-        console.log(response);
-        if (response.code === "success") {
-            envOptions.value = response.data
-        } else {
-            ElMessage({
-                message: response.msg,
-                type: 'success',
-            })
-        }
-    })
     axios.get("/project/list").then((response) => {
         console.log(response);
         if (response.code === "success") {
